@@ -36,6 +36,14 @@ tyang2896_add_test:
 
     add r0, r0, r1
 
+    push {lr, r0 - r1}
+
+    ldr r0, =0xFFFFFF
+
+    bl busy_delay
+
+    pop {lr, r0 - r1}
+
     bx lr                           @ Return (Branch eXchange) to the address in the link register (lr) 
 
     .size   tyang2896_add_test, .- tyang2896_add_test @@ - symbol size (makes the debugger happy)
