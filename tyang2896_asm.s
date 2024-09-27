@@ -36,13 +36,13 @@ tyang2896_add_test:
 
     add r0, r0, r1
 
-    push {lr, r0 - r1}
+    push {lr, r0}
 
-    ldr r0, =0xFFFFFF
+    mov r0, r2
 
     bl busy_delay
 
-    pop {lr, r0 - r1}
+    pop {lr, r0}
 
     bx lr                           @ Return (Branch eXchange) to the address in the link register (lr) 
 
