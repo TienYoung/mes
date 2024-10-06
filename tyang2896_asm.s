@@ -83,6 +83,29 @@ tyang2896_add_test:
 
     .size   tyang2896_add_test, .- tyang2896_add_test @@ - symbol size (makes the debugger happy)
 
+@@ Function Header Block
+    .align  2               @ Code alignment is 2^n alignment (n=2)
+    .syntax unified         @ Sets the instruction set to the unified ARM + THUMB
+    .global tyang2896_a2   @ Make the symbol name for the function visible to the linker
+    .code   16              @ 16bit THUMB code (BOTH .code and .thumb_func are required)
+    .thumb_func             @ Specifies that the following symbol is the name of a THUMB
+    .type   tyang2896_a2, %function   @ Declares that the symbol is a function (not strictly required)
+
+@ Function Declaration : int tyang2896_a2 (int num, int wait)
+@
+@ Input: Document This
+@ Returns: Document This
+@ 
+
+@ Here is the assignment 2 assembly function
+tyang2896_a2:
+
+    @ Fill in the necessary logic here
+
+    bx lr                           @ Return (Branch eXchange) to the address held by the lr 
+
+    .size   tyang2896_a2, .- tyang2896_a2    @@ - symbol size (makes the debugger happy)
+
 @ Function Declaration : int busy_delay(int cycles)
 @
 @ Input: r0 (i.e. r0 holds number of cycles to delay)
