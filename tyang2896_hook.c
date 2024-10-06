@@ -65,7 +65,7 @@ void _tyang2896_Assignment2(int action)
 
   if(fetch_status) {
   	// Use a default value
-  	count = 0xFFFFEF;
+  	count = 3;
   }
 
   fetch_status = fetch_uint32_arg(&delay);

@@ -101,6 +101,35 @@ tyang2896_add_test:
 tyang2896_a2:
 
     @ Fill in the necessary logic here
+    push {r4}                    @ Preserve r4 for caller.
+    mov r4, r0                   @ Use r4 as loop indicator.
+    loop:
+        subs r4, r4, #1          @ r4--;
+        bmi out                  @ r4 < 0 ? break : continue;
+        @ Toggle all leds
+        push {r5}                @ Preserve r5 for caller.
+        mov r5, #0               @ r5 = 0;
+        toggle_beg:
+            push {lr, r0 - r1}      @ Preseve lr, r0 - r1 for subroutine.
+            mov r0, r5              @ r0 = r5;
+            bl BSP_LED_Toggle
+            pop {lr, r0 - r1}       @ Restore lr, r0 - r1.
+            
+            add r5, r5, #1          @ r5++;
+            cmp r5, #8              @ r5 < 8 : continue ? break;
+            blt toggle_beg
+        toggle_end:
+        pop {r5}                  @ Restore r5.
+
+        @ Delay to the next
+        push {lr, r0}             @ Preserve lr, r0 for subroutine.
+        mov r0, r1                @ r0 = r1;
+        bl busy_delay
+        pop {lr, r0}              @ Restore lr, r0.
+
+        b loop                    @ Repeat.
+    out:
+    pop {r4}                      @ Restore r4.
 
     bx lr                           @ Return (Branch eXchange) to the address held by the lr 
 
