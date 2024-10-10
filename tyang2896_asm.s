@@ -145,6 +145,18 @@ tyang2896_a2:
 
 @ Here is the actual function
 tyang2896_string_test:
+    StringLoop:
+        ldrb r1, [r0]                    @ Dereference the character r0 points to
+        
+        cmp r1, #0                       @ Check if that value is zero
+        
+        beq OutLabel                     @ if it is, branch out
+
+        add r0, r0, #1                   @ Add one to R0
+        
+        b StringLoop                     @ Branch back to string loop
+
+    OutLabel:
 
     bx lr
     .size   tyang2896_string_test, .-tyang2896_string_test
