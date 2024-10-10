@@ -135,6 +135,21 @@ tyang2896_a2:
 
     .size   tyang2896_a2, .- tyang2896_a2    @@ - symbol size (makes the debugger happy)
 
+.global tyang2896_string_test
+
+@ Function Declaration : int tyang2896_string_test(char *p)
+@
+@ Input: r0 (i.e. r0 a pointer to a byte array)
+@ Returns: r0
+@ 
+
+@ Here is the actual function
+tyang2896_string_test:
+
+    bx lr
+    .size   tyang2896_string_test, .-tyang2896_string_test
+
+
 @ Function Declaration : int busy_delay(int cycles)
 @
 @ Input: r0 (i.e. r0 holds number of cycles to delay)

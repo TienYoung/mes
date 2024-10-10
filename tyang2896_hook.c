@@ -79,3 +79,31 @@ void _tyang2896_Assignment2(int action)
 }
 
 ADD_CMD("tyang2896_a2", _tyang2896_Assignment2, "Assignment 2")
+
+int tyang2896_string_test(char *p);
+
+void tyang2896_StringTest(int action)
+{
+
+  if(action==CMD_SHORT_HELP) return;
+  if(action==CMD_LONG_HELP) {
+    printf("String Test\n\n"
+	   "This command tests new string function by tyang2896\n"
+	   );
+
+    return;
+  }
+
+  int fetch_status;
+  char *destptr;
+
+  fetch_status = fetch_string_arg(&destptr);
+
+  if (fetch_status) {
+    // Default logic goes here
+  }
+
+  printf("string_test returned: %d\n", tyang2896_string_test(destptr) );
+}
+
+ADD_CMD("tyang2896_string", tyang2896_StringTest,"Test the new string function")
