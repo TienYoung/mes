@@ -11,7 +11,13 @@
 
 #include "common.h"
 
-int tyang2896_lab6(int x, int y);
+/*
+* Function Name: tyang2896_lab6
+* Parameter: 
+*   delay: interval of toggle leds
+* Return: count of the leds toggled
+*/
+int tyang2896_lab6(int delay);
 
 void Lab6_tyang2896(int action)
 {
@@ -24,7 +30,17 @@ void Lab6_tyang2896(int action)
 
     return;
   }
-  printf("tyang2896_lab6 returned: %d\n", tyang2896_lab6(99, 87) );
+  uint32_t delay = 0;
+
+  // Get deley from user
+  int fetch_status = fetch_uint32_arg(&delay);
+
+  if(fetch_status) {
+  	// Use a default delay value
+  	delay = 0xFFFFFF;
+  }
+
+  printf("tyang2896_lab6 returned: %d\n", tyang2896_lab6(delay) );
 }
 
 ADD_CMD("tyang2896_lab6", Lab6_tyang2896,"Test the new lab 6 function")

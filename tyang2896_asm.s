@@ -25,21 +25,50 @@
 
     .type   tyang2896_lab6, %function   @ Declares that the symbol is a function (not strictly required)
 
-@ Function Declaration : int tyang2896_lab6(int x, int y)
+@ Function Declaration : int tyang2896_lab6(int delay)
 @
-@ Input: r0, r1 (i.e. r0 holds x, r1 holds y)
+@ Input: r0 (r0 holds delay from user)
+@ 
 @ Returns: r0
 @ 
 
 @ Here is the actual tyang2896_lab6 function
 tyang2896_lab6:
-    push {lr}
+    push {lr, r4 - r6}
+    
+    .equ index,   7       @ Set loop index to 7
+    .equ counter, 0       @ Set toggle counter to 0
+    mov r4, #index
+    mov r5, #counter
+    mov r6, r0
+    loop:
+        cmp r4, #0
+        bge skip           @ Check the loop index
+    reset:
+        mov r4, index      @ Reset it to 7. Else, 
+    skip:                  @ skip to next step
+        @ Toggle the led at the current loop index
+        mov r0, r4
+        bl BSP_LED_Toggle  
+        
+        add r5, r5, #1     @ Increment the toggle counter
+        subs r4, r4, #1    @ Decrement the loop index.
+    
+        @ Delay for variable amount of time, retrieved from the user in the C code
+        mov r0, r6
+        bl busy_delay      
+        
+        @ Check the state of the button using BSP_PB_GetState
+        mov r0, #0
+        bl BSP_PB_GetState 
 
-    @ These lines detect that the button state
-    mov r0, #0
-    bl BSP_PB_GetState
+        cmp r0, #1          @ If it is pressed,
+        beq out            @ jump out of the loop.
+        b loop             @ Else, go back to loop
+    out:
+    mov r0, r5             @ Return the toggle counter
 
-    pop {lr}
+    pop {lr, r4 - r6}
     bx lr                           @ Return (Branch eXchange) to the address in the link register (lr) 
     .size   tyang2896_lab6, .-tyang2896_lab6    @@ - symbol size (not strictly required, but makes the debugger happy)
 
