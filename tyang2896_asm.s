@@ -35,9 +35,9 @@
 tyang2896_lab6:
     push {lr}
 
-    @ These lines just show that the code is working
-    ldr r0, =0xFFFFFF
-    bl busy_delay
+    @ These lines detect that the button state
+    mov r0, #0
+    bl BSP_PB_GetState
 
     pop {lr}
     bx lr                           @ Return (Branch eXchange) to the address in the link register (lr) 
