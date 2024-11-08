@@ -62,6 +62,7 @@ void Lab7_tyang2896(int action)
   
   uint32_t delay = 0;
   uint32_t count = 0;
+  uint32_t mode = 0;
 
   // Get deley from user
   int fetch_status = fetch_uint32_arg(&delay);
@@ -75,6 +76,11 @@ void Lab7_tyang2896(int action)
   	// Use a default count value
   	count = 3;
   }
+  fetch_status = fetch_uint32_arg(&mode);
+  if(fetch_status) {
+  	// Use a default count value
+  	mode = 0;
+  }
 
   for (size_t i = 0; i < count; i++)
   {
@@ -82,13 +88,35 @@ void Lab7_tyang2896(int action)
 
     BSP_GYRO_GetXYZ(xyz);
 
-    printf("Gyroscope returns:\n"
-      "   X: %f\n"
-      "   Y: %f\n"
-      "   Z: %f\n",
-      xyz[0] / 256,
-      xyz[1] / 256,
-      xyz[2] / 256);
+    switch (mode)
+    {
+    case 0:
+      printf("Gyroscope returns:\n"
+             "   X: %f\n"
+             "   Y: %f\n"
+             "   Z: %f\n",
+             xyz[0] / 256,
+             xyz[1] / 256,
+             xyz[2] / 256);
+      break;
+    case 1:
+      printf("Gyroscope returns:\n"
+             "   X: %f\n",
+             xyz[0] / 256);
+      break;
+    case 2:
+      printf("Gyroscope returns:\n"
+             "   Y: %f\n",
+             xyz[1] / 256);
+      break;
+    case 3:
+      printf("Gyroscope returns:\n"
+             "   Z: %f\n",
+             xyz[2] / 256);
+      break;
+    default:
+      break;
+    }
 
     tyang2896_lab7(delay);
   }
