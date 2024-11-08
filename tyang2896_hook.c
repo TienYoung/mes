@@ -63,10 +63,10 @@ void Lab7_tyang2896(int action)
   uint32_t delay = 0;
   uint32_t count = 0;
   uint32_t mode = 0;
+  uint32_t scale = 0;
 
   // Get deley from user
   int fetch_status = fetch_uint32_arg(&delay);
-
   if(fetch_status) {
   	// Use a default delay value
   	delay = 0xFFFFFF;
@@ -74,12 +74,17 @@ void Lab7_tyang2896(int action)
   fetch_status = fetch_uint32_arg(&count);
   if(fetch_status) {
   	// Use a default count value
-  	count = 3;
+  	count = 10;
   }
   fetch_status = fetch_uint32_arg(&mode);
   if(fetch_status) {
   	// Use a default count value
   	mode = 0;
+  }
+  fetch_status = fetch_uint32_arg(&scale);
+  if(fetch_status) {
+  	// Use a default count value
+  	scale = 256;
   }
 
   for (size_t i = 0; i < count; i++)
@@ -95,24 +100,24 @@ void Lab7_tyang2896(int action)
              "   X: %f\n"
              "   Y: %f\n"
              "   Z: %f\n",
-             xyz[0] / 256,
-             xyz[1] / 256,
-             xyz[2] / 256);
+             xyz[0] / scale,
+             xyz[1] / scale,
+             xyz[2] / scale);
       break;
     case 1:
       printf("Gyroscope returns:\n"
              "   X: %f\n",
-             xyz[0] / 256);
+             xyz[0] / scale);
       break;
     case 2:
       printf("Gyroscope returns:\n"
              "   Y: %f\n",
-             xyz[1] / 256);
+             xyz[1] / scale);
       break;
     case 3:
       printf("Gyroscope returns:\n"
              "   Z: %f\n",
-             xyz[2] / 256);
+             xyz[2] / scale);
       break;
     default:
       break;
