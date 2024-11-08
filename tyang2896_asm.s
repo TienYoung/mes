@@ -72,6 +72,31 @@ tyang2896_lab6:
     bx lr                           @ Return (Branch eXchange) to the address in the link register (lr) 
     .size   tyang2896_lab6, .-tyang2896_lab6    @@ - symbol size (not strictly required, but makes the debugger happy)
 
+@@ Function Header Block
+
+    .global tyang2896_lab7        @ Make the symbol name for the function visible to the linker
+    .type   tyang2896_lab7, %function   @ Declares that the symbol is a function (not strictly required)
+
+@ Function Declaration : int tyang2896_lab7(int x, int y)
+@
+@ Input: r0, r1 (i.e. r0 holds x, r1 holds y)
+@ Returns: r0
+@ 
+
+@ Here is the actual tyang2896_lab7 function
+tyang2896_lab7:
+    push {lr}
+
+    @ These lines just show that the code is working
+    ldr r0, =0xFFFFF
+    bl busy_delay
+
+    @ Get the state of the user button here.
+    @ Return the result to the calling C function
+
+    pop {lr}
+    bx lr                           @ Return (Branch eXchange) to the address in the link register (lr) 
+    .size   tyang2896_lab7, .-tyang2896_lab7    @@ - symbol size (not strictly required)
 
 .global tyang2896_a3
 .type   tyang2896_a3, %function

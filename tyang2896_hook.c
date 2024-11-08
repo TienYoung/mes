@@ -10,6 +10,7 @@
 #include <ctype.h>
 
 #include "common.h"
+#include "stm32f3_discovery_gyroscope.h"
 
 /*
 * Function Name: tyang2896_lab6
@@ -44,6 +45,39 @@ void Lab6_tyang2896(int action)
 }
 
 ADD_CMD("tyang2896_lab6", Lab6_tyang2896,"Test the new lab 6 function")
+
+int tyang2896_lab7();
+
+void Lab7_tyang2896(int action)
+{
+
+  if(action==CMD_SHORT_HELP) return;
+  if(action==CMD_LONG_HELP) {
+    printf("Lab 7\n\n"
+	   "This command tests new lab 7 function by tyang2896\n"
+	   );
+
+    return;
+  }
+
+  float xyz[3] = {0};
+
+  BSP_GYRO_GetXYZ(xyz);
+
+  printf("Gyroscope returns:\n"
+    "   X: %f\n"
+    "   Y: %f\n"
+    "   Z: %f\n",
+    xyz[0] / 256,
+    xyz[1] / 256,
+    xyz[2] / 256);
+
+  printf("tyang2896_lab7 returned: %d\n", tyang2896_lab7() );
+
+  
+}
+
+ADD_CMD("tyang2896_lab7", Lab7_tyang2896,"Test the new lab 7 function")
 
 int tyang2896_a3(char *p);
 
