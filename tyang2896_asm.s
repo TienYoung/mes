@@ -85,7 +85,7 @@ tyang2896_lab6:
 
 @ Here is the actual tyang2896_lab7 function
 tyang2896_lab7:
-    push {lr}
+    push {r0, lr}
 
     @ These lines just show that the code is working
     bl busy_delay
@@ -93,7 +93,7 @@ tyang2896_lab7:
     @ Get the state of the user button here.
     @ Return the result to the calling C function
 
-    pop {lr}
+    pop {r0, lr}
     bx lr                           @ Return (Branch eXchange) to the address in the link register (lr) 
     .size   tyang2896_lab7, .-tyang2896_lab7    @@ - symbol size (not strictly required)
 
