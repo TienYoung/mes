@@ -88,7 +88,6 @@ tyang2896_lab7:
     push {lr}
 
     @ These lines just show that the code is working
-    ldr r0, =0xFFFFF
     bl busy_delay
 
     @ Get the state of the user button here.

@@ -46,7 +46,7 @@ void Lab6_tyang2896(int action)
 
 ADD_CMD("tyang2896_lab6", Lab6_tyang2896,"Test the new lab 6 function")
 
-int tyang2896_lab7();
+int tyang2896_lab7(int delay);
 
 void Lab7_tyang2896(int action)
 {
@@ -59,20 +59,42 @@ void Lab7_tyang2896(int action)
 
     return;
   }
+  
+  uint32_t delay = 0;
+  uint32_t count = 0;
 
-  float xyz[3] = {0};
+  // Get deley from user
+  int fetch_status = fetch_uint32_arg(&delay);
 
-  BSP_GYRO_GetXYZ(xyz);
+  if(fetch_status) {
+  	// Use a default delay value
+  	delay = 0xFFFFFF;
+  }
+  fetch_status = fetch_uint32_arg(&count);
+  if(fetch_status) {
+  	// Use a default count value
+  	count = 3;
+  }
 
-  printf("Gyroscope returns:\n"
-    "   X: %f\n"
-    "   Y: %f\n"
-    "   Z: %f\n",
-    xyz[0] / 256,
-    xyz[1] / 256,
-    xyz[2] / 256);
+  for (size_t i = 0; i < count; i++)
+  {
+    float xyz[3] = {0};
 
-  printf("tyang2896_lab7 returned: %d\n", tyang2896_lab7() );
+    BSP_GYRO_GetXYZ(xyz);
+
+    printf("Gyroscope returns:\n"
+      "   X: %f\n"
+      "   Y: %f\n"
+      "   Z: %f\n",
+      xyz[0] / 256,
+      xyz[1] / 256,
+      xyz[2] / 256);
+
+    tyang2896_lab7(delay);
+  }
+  
+
+  printf("tyang2896_lab7 returned: %d\n", tyang2896_lab7(delay) );
 
   
 }
