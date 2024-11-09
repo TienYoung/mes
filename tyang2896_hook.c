@@ -134,7 +134,7 @@ void Lab7_tyang2896(int action)
 
 ADD_CMD("tyang2896_lab7", Lab7_tyang2896,"Test the new lab 7 function")
 
-int tyang2896_a3(char *p);
+int tyang2896_a3(int delay, char *pattern, int number);
 
 void A3_tyang2896(int action)
 {
@@ -148,17 +148,25 @@ void A3_tyang2896(int action)
     return;
   }
 
-  int fetch_status;
-  char *pattern;
-
-  fetch_status = fetch_string_arg(&pattern);
-
+  int fetch_status = 0;
+  uint32_t delay = 0;
+  char *pattern = NULL;
+  uint32_t number = 0;
+  
+  fetch_status = fetch_uint32_arg(&delay);
   if (fetch_status) {
-    // Default logic goes here
-    pattern = "Test Pattern";
+    delay = 0xFFFFFF;
+  }
+  fetch_status = fetch_string_arg(&pattern);
+  if (fetch_status) {
+    pattern = "01234567";
+  }
+  fetch_status = fetch_uint32_arg(&number);
+  if (fetch_status) {
+    number = 1;
   }
 
-  printf("tyang2896_a3 returned: %d\n", tyang2896_a3(pattern) );
+  printf("tyang2896_a3 returned: %d\n", tyang2896_a3(delay, pattern, number));
 }
 
 ADD_CMD("tyang2896_a3", A3_tyang2896,"Test the A3 function")
