@@ -134,6 +134,14 @@ void Lab7_tyang2896(int action)
 
 ADD_CMD("tyang2896_lab7", Lab7_tyang2896,"Test the new lab 7 function")
 
+/*
+* Function Name: tyang2896_a3
+* Parameter: 
+*   delay: interval of toggle leds
+*   pattern: LED toggle pattern
+*   number: repeat number of one entire pattern
+* Return: count of the leds toggled
+*/
 int tyang2896_a3(int delay, char *pattern, int number);
 
 void A3_tyang2896(int action)
