@@ -115,20 +115,21 @@ tyang2896_a3:
     .equ mod_8,    7                @ 2^3 - 1
 
     mov r4, r0                      @ delay
-    mov r5, r1                      @ pattern pointer
+    mov r5, r1                      @ store pattern pointer to r5
     mov r6, r2                      @ number
     mov r7, #0                      @ counter
     repeat:
         subs r6, r6, #1             @ if(--number < 0)
         blt end                     @ Repeat time exceed number
         
+        mov r9, r5                  @ index of pattern pointer
         iterate:
             mov r0, #0
             bl BSP_PB_GetState      @ Get button state
             cmp r0, #1              @ If pressed
             beq end
 
-            ldrb r8, [r5]           @ ASCII of *r5
+            ldrb r8, [r9]           @ ASCII of *r5
             cmp r8, #0              @ if(ASCII == 0)
             beq terminate           @ Meet the string terminator
             
@@ -141,7 +142,7 @@ tyang2896_a3:
             
             mov r0, r4
             bl busy_delay           @ Delay by user specified
-            add r5, r5, #1          @ Point to the next ASCII
+            add r9, r9, #1          @ Point to the next ASCII
             b iterate
         terminate:
         b repeat
