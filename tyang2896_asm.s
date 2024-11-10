@@ -100,15 +100,55 @@ tyang2896_lab7:
 .global tyang2896_a3
 .type   tyang2896_a3, %function
 
-@ Function Declaration: int tyang2896_a3(char *ptr)
+@ Function Declaration: int tyang2896_a3(int delay, char *ptr, int number)
 @
-@ Input: r0 (i.e. r0 is a pointer to a char)
-@ Returns: r0
+@ Input: r0, r1, r2 (i.e. r0 is the delay of toggle, r1 is a pointer to a char
+@ r2 is the number of repeats)
+@ Returns: r0 the number of times toggle has been called
 @ 
 
 @ Here is the function
 tyang2896_a3:
+    push {lr, r4 - r8}
 
+    .equ ascii_0, 48                @ '0'
+    .equ mod_8,   7                 @ 2^3 - 1
+
+    mov r4, r0                      @ delay
+    mov r5, r1                      @ pattern pointer
+    mov r6, r2                      @ number
+    mov r7, #0                      @ count
+    repeat:
+        subs r6, r6, #1             @ if(--number < 0)
+        blt end                     @ Repeat time exceed number
+        
+        iterate:
+            mov r0, #0
+            bl BSP_PB_GetState      @ Get button state
+            cmp r0, #1              @ If pressed
+            beq end
+
+            ldr r8, [r5]            @ ASCII of *r5
+            cmp r8, #0              @ if(ASCII == 0)
+            beq terminate           @ Meet the string terminator
+            
+            sub r8, r8, #ascii_0    @ Convert ASCII to number
+            and r8, r8, #mod_8      @ modulo for 8 which is power of 2
+
+            mov r0, r8
+            bl BSP_LED_Toggle       @ Toggle by pattern
+            add r7, r7, #1          @ Increase the toggle counter
+            
+            mov r0, r4
+            bl busy_delay           @ Delay by user specified
+            add r5, r5, #1          @ Point to the next ASCII
+            b iterate
+        terminate:
+        b repeat
+    end:
+    mov r0, r7
+
+    pop {lr, r4 - r8}
     bx lr
     .size   tyang2896_a3, .-tyang2896_a3
 
