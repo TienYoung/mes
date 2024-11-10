@@ -109,7 +109,7 @@ tyang2896_lab7:
 
 @ Here is the function
 tyang2896_a3:
-    push {lr, r4 - r8}
+    push {lr, r4 - r9}
 
     .equ ascii_0, 48                @ '0'
     .equ mod_8,    7                @ 2^3 - 1
@@ -149,7 +149,7 @@ tyang2896_a3:
     end:
     mov r0, r7
 
-    pop {lr, r4 - r8}
+    pop {lr, r4 - r9}
     bx lr
     .size   tyang2896_a3, .-tyang2896_a3
 
