@@ -112,12 +112,12 @@ tyang2896_a3:
     push {lr, r4 - r8}
 
     .equ ascii_0, 48                @ '0'
-    .equ mod_8,   7                 @ 2^3 - 1
+    .equ mod_8,    7                @ 2^3 - 1
 
     mov r4, r0                      @ delay
     mov r5, r1                      @ pattern pointer
     mov r6, r2                      @ number
-    mov r7, #0                      @ count
+    mov r7, #0                      @ counter
     repeat:
         subs r6, r6, #1             @ if(--number < 0)
         blt end                     @ Repeat time exceed number
@@ -128,7 +128,7 @@ tyang2896_a3:
             cmp r0, #1              @ If pressed
             beq end
 
-            ldr r8, [r5]            @ ASCII of *r5
+            ldrb r8, [r5]           @ ASCII of *r5
             cmp r8, #0              @ if(ASCII == 0)
             beq terminate           @ Meet the string terminator
             
