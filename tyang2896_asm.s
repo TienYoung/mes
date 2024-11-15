@@ -1,4 +1,7 @@
-@ Test code for my own new function called from C
+@ Assembly File - Lab 8 Version
+@
+@ NOTE THERE IS A DATA SECTION AT THE END OF THIS FILE FOR ASSIGNMENT 4
+@ USE THAT DATA SECTION FOR ANY DATA YOU NEED, DO NOT ADD ANOTHER.
 
 @ This is a comment. Anything after an @ symbol is ignored.
 @@ This is also a comment. Some people use double @@ symbols. 
@@ -17,143 +20,155 @@
     .syntax unified         @ Sets the instruction set to the new unified ARM + THUMB
                             @ instructions. The default is divided (separate instruction sets)
 
-    .global tyang2896_lab6        @ Make the symbol name for the function visible to the linker
+    .global tyang2896_lab8        @ Make the symbol name for the function visible to the linker
 
     .code   16              @ 16bit THUMB code (BOTH .code and .thumb_func are required)
     .thumb_func             @ Specifies that the following symbol is the name of a THUMB
                             @ encoded function. Necessary for interlinking between ARM and THUMB code.
 
-    .type   tyang2896_lab6, %function   @ Declares that the symbol is a function (not strictly required)
+    .type   tyang2896_lab8, %function   @ Declares that the symbol is a function (not strictly required)
 
-@ Function Declaration : int tyang2896_lab6(int delay)
+@ Function Declaration : void tyang2896_lab8(void)
 @
-@ Input: r0 (r0 holds delay from user)
-@ 
-@ Returns: r0
-@ 
-
-@ Here is the actual tyang2896_lab6 function
-tyang2896_lab6:
-    push {lr, r4 - r6}
-    
-    .equ index,   7       @ Set loop index to 7
-    .equ counter, 0       @ Set toggle counter to 0
-    mov r4, #index
-    mov r5, #counter
-    mov r6, r0
-    loop:
-        cmp r4, #0
-        bge skip           @ Check the loop index
-    reset:
-        mov r4, index      @ Reset it to 7. Else, 
-    skip:                  @ skip to next step
-        @ Toggle the led at the current loop index
-        mov r0, r4
-        bl BSP_LED_Toggle  
-        
-        add r5, r5, #1     @ Increment the toggle counter
-        subs r4, r4, #1    @ Decrement the loop index.
-    
-        @ Delay for variable amount of time, retrieved from the user in the C code
-        mov r0, r6
-        bl busy_delay      
-        
-        @ Check the state of the button using BSP_PB_GetState
-        mov r0, #0
-        bl BSP_PB_GetState 
-
-        cmp r0, #1          @ If it is pressed,
-        beq out            @ jump out of the loop.
-        b loop             @ Else, go back to loop
-    out:
-    mov r0, r5             @ Return the toggle counter
-
-    pop {lr, r4 - r6}
-    bx lr                           @ Return (Branch eXchange) to the address in the link register (lr) 
-    .size   tyang2896_lab6, .-tyang2896_lab6    @@ - symbol size (not strictly required, but makes the debugger happy)
-
-@@ Function Header Block
-
-    .global tyang2896_lab7        @ Make the symbol name for the function visible to the linker
-    .type   tyang2896_lab7, %function   @ Declares that the symbol is a function (not strictly required)
-
-@ Function Declaration : int tyang2896_lab7(int x, int y)
-@
-@ Input: r0, r1 (i.e. r0 holds x, r1 holds y)
-@ Returns: r0
+@ Input: none
+@ Returns: nothing
 @ 
 
-@ Here is the actual tyang2896_lab7 function
-tyang2896_lab7:
-    push {r0, lr}
+@ Here is the actual tyang2896_lab8 function
+tyang2896_lab8:
+    push {lr}
 
-    @ These lines just show that the code is working
+    @ For now, this function just toggles, delays, and toggles again.
+    mov r0, #3
+    bl BSP_LED_Toggle
+
+    ldr r0, =0xFFFFFFF
     bl busy_delay
 
-    @ Get the state of the user button here.
-    @ Return the result to the calling C function
+    mov r0, #3
+    bl BSP_LED_Toggle
 
-    pop {r0, lr}
+    pop {lr}
     bx lr                           @ Return (Branch eXchange) to the address in the link register (lr) 
-    .size   tyang2896_lab7, .-tyang2896_lab7    @@ - symbol size (not strictly required)
+    .size   tyang2896_lab8, .-tyang2896_lab8    @@ - symbol size (not strictly required, but makes the debugger happy)
 
-.global tyang2896_a3
-.type   tyang2896_a3, %function
 
-@ Function Declaration: int tyang2896_a3(int delay, char *ptr, int number)
+
+
+.global tyang2896_a4
+.type   tyang2896_a4, %function
+
+@ Function Declaration : int tyang2896_a4(int x)
 @
-@ Input: r0, r1, r2 (i.e. r0 is the delay of toggle, r1 is a pointer to a char
-@ r2 is the number of repeats)
-@ Returns: r0 the number of times toggle has been called
+@ Input: Document this
+@ Returns: Document this
 @ 
 
-@ Here is the function
-tyang2896_a3:
-    push {lr, r4 - r9}
+@ Here is the actual function
+tyang2896_a4:
 
-    .equ ascii_0, 48                @ '0'
-    .equ mod_8,    7                @ 2^3 - 1
+    @ This function only exists to start / initialize your A4
+    @ logic working. No actions should be taken in this logic,
+    @ aside from storing the parameters your A4 logic needs to run.
 
-    mov r4, r0                      @ delay
-    mov r5, r1                      @ store pattern pointer to r5
-    mov r6, r2                      @ number
-    mov r7, #0                      @ counter
-    repeat:
-        subs r6, r6, #1             @ if(--number < 0)
-        blt end                     @ Repeat time exceed number
-        
-        mov r9, r5                  @ index of pattern pointer
-        iterate:
-            mov r0, #0
-            bl BSP_PB_GetState      @ Get button state
-            cmp r0, #1              @ If pressed
-            beq end
+    @ Store the value we received indicating the running state
+    ldr r1, =a4_is_running
+    str r0, [r1]
 
-            ldrb r8, [r9]           @ ASCII of *r5
-            cmp r8, #0              @ if(ASCII == 0)
-            beq terminate           @ Meet the string terminator
-            
-            sub r8, r8, #ascii_0    @ Convert ASCII to number
-            and r8, r8, #mod_8      @ modulo for 8 which is power of 2
-
-            mov r0, r8
-            bl BSP_LED_Toggle       @ Toggle by pattern
-            add r7, r7, #1          @ Increase the toggle counter
-            
-            mov r0, r4
-            bl busy_delay           @ Delay by user specified
-            add r9, r9, #1          @ Point to the next ASCII
-            b iterate
-        terminate:
-        b repeat
-    end:
-    mov r0, r7
-
-    pop {lr, r4 - r9}
     bx lr
-    .size   tyang2896_a3, .-tyang2896_a3
+    .size   tyang2896_a4, .-tyang2896_a4
 
-@ Function Declaration: int busy_delay(int cycles)
+
+.global tyang2896_a4_btn
+.type   tyang2896_a4_btn, %function
+
+@ Function Declaration : void tyang2896_a4_btn(void)
+@
+@ Input: None
+@ Returns: Nothing
+@ 
+@ Reminder - this requires the button has been initialized as an interrupt
+@ in main.c using BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI)
+@ as well as requires a new function set up void EXTI0_IRQHandler(void)
+
+@ Here is the actual function
+tyang2896_a4_btn:
+    push {lr}
+
+    ldr r1, =a4_button_count        @ Get the address of the counter
+    ldr r0, [r1]                    @ Get the actual count
+    add r0, r0, #1                  @ Increment the count
+    and r0, #7                      @ Keep the count between 0 and 7
+    str r0, [r1]                    @ Store the new count
+
+    bl BSP_LED_Toggle               @ Toggle the current LED
+
+    pop {lr}
+    bx lr
+    .size   tyang2896_a4_btn, .-tyang2896_a4_btn
+
+
+.global tyang2896_a4_tick
+.type   tyang2896_a4_tick, %function
+
+@ Function Declaration : void tyang2896_a4_tick(void)
+@
+@ Input: None
+@ Returns: Nothing
+@ 
+
+@ Here is the actual function
+tyang2896_a4_tick:
+    push {lr}
+
+    @ As a starting point, this function implements the basics needed
+    @ to determine if our A4 logic should be running.
+    @
+    @ You will have to add logic here for A4.
+
+    @ Some useful notes
+    @
+    @ BSP_LED_On, BSP_LED_Off - same argument as BSP_LED_Toggle, sets
+    @ the LED to ON or OFF as you tell it
+    @
+    @ How to delay: DO NOT use busy_delay - remember, this is an interrupt
+    @ handler. If you need a delay, use a counter to count how many times
+    @ this function has been called, and use that to skip a desired number
+    @ of calls.
+
+
+    @ ***** Get something
+    ldr r1, =a4_is_running
+    ldr r0, [r1]
+
+    @ ***** Check something
+    cmp r0, #0
+    ble a4_skip
+
+        @ This part below is skipped if A4 is NOT running. You will want to
+        @ keep all your A4 logic inside here.
+        @ DO NOT PUT LOGIC FOR A4 ABOVE THIS LINE -----------------------------
+
+        @ Even within this logic, you should still take a philosopy of check
+        @ things, do things, and store things - do not use delays of any sort,
+        @ and only use loops if they are bounded (that is, guaranteed to end)
+
+        @ ***** Do something
+        mov r0, #0
+        bl BSP_LED_Toggle
+
+        @ DO NOT PUT LOGIC FOR A4 BELOW THIS LINE -----------------------------
+        @ End of A4 skipped logic. Do not add logic below here.
+
+    a4_skip:
+
+    @ ***** End of our tick function
+    pop {lr}
+    bx lr
+    .size   tyang2896_a4_tick, .-tyang2896_a4_tick
+
+
+@ Function Declaration : int busy_delay(int cycles)
 @
 @ Input: r0 (i.e. r0 is how many cycles to delay)
 @ Returns: r0
@@ -172,6 +187,13 @@ busy_delay:
 
     pop {r6}
     bx lr               @ Return to calling function
+
+
+@ Here is another data section, we will use it for some key interrupt items
+@ We will put all necessary data for A4 in this block
+.data
+a4_is_running: .word 0
+a4_button_count: .word 0
 
 
 @ Assembly file ended by single .end directive on its own line

@@ -1,5 +1,7 @@
 /*
- *	C to assembler menu hook
+ *  C to assembler menu hook
+ *
+ *  Modified by tyang2896
  * 
  */
 
@@ -8,102 +10,171 @@
 #include <ctype.h>
 
 #include "common.h"
+#include "stm32f3_discovery_gyroscope.h"
 
-int tyang2896_add_test(int x, int y, int delay);
-int tyang2896_a2(int num, int wait);
+/*
+* Function Name: tyang2896_lab6
+* Parameter: 
+*   delay: interval of toggle leds
+* Return: count of the leds toggled
+*/
+int tyang2896_lab6(int delay);
 
-void AddTest(int action)
+void Lab6_tyang2896(int action)
 {
 
   if(action==CMD_SHORT_HELP) return;
   if(action==CMD_LONG_HELP) {
-    printf("Addition Test\n\n"
-	   "This command tests new addition function by tyang2896\n"
+    printf("Lab 6\n\n"
+	   "This command tests new lab 6 function by tyang2896\n"
 	   );
 
     return;
   }
-  uint32_t delay;
+  uint32_t delay = 0;
 
-  int fetch_status;
-
-  fetch_status = fetch_uint32_arg(&delay);
+  // Get deley from user
+  int fetch_status = fetch_uint32_arg(&delay);
 
   if(fetch_status) {
   	// Use a default delay value
   	delay = 0xFFFFFF;
   }
 
-  // When we call our function, pass the delay value.
-  // printf(“<<< here is where we call add_test – can you add a third parameter? >>>”);
-
-  printf("tyang2896_add_test returned: %d\n", tyang2896_add_test(99, 87, delay) );
+  printf("tyang2896_lab6 returned: %d\n", tyang2896_lab6(delay) );
 }
 
-ADD_CMD("tyang2896_add", AddTest,"Test the new add function")
+ADD_CMD("tyang2896_lab6", Lab6_tyang2896,"Test the new lab 6 function")
 
-// Assignment 2 C Hook Function
-//
-void _tyang2896_Assignment2(int action)
+int tyang2896_lab7(int delay);
+
+void Lab7_tyang2896(int action)
 {
 
   if(action==CMD_SHORT_HELP) return;
   if(action==CMD_LONG_HELP) {
-    printf("Assignment 2\n\n"
-	   "This command triggers assignment 2 by tyang2896\n"
+    printf("Lab 7\n\n"
+	   "This command tests new lab 7 function by tyang2896\n"
 	   );
 
     return;
   }
+  
+  uint32_t delay = 0;
+  uint32_t count = 0;
+  uint32_t mode = 0;
+  uint32_t scale = 0;
 
-  // Retrieve user inputs for count and delay here
-  uint32_t count;
-  uint32_t delay;
-  int fetch_status;
-
+  // Get deley from user
+  int fetch_status = fetch_uint32_arg(&delay);
+  if(fetch_status) {
+  	// Use a default delay value
+  	delay = 0xFFFFFF;
+  }
   fetch_status = fetch_uint32_arg(&count);
-
   if(fetch_status) {
-  	// Use a default value
-  	count = 3;
+  	// Use a default count value
+  	count = 10;
+  }
+  fetch_status = fetch_uint32_arg(&mode);
+  if(fetch_status) {
+  	// Use a default count value
+  	mode = 0;
+  }
+  fetch_status = fetch_uint32_arg(&scale);
+  if(fetch_status) {
+  	// Use a default count value
+  	scale = 256;
   }
 
-  fetch_status = fetch_uint32_arg(&delay);
+  for (size_t i = 0; i < count; i++)
+  {
+    float xyz[3] = {0};
 
-  if(fetch_status) {
-  	// Use a default value
-  	delay = 0xFFFFEF;
+    BSP_GYRO_GetXYZ(xyz);
+
+    switch (mode)
+    {
+    case 0:
+      printf("Gyroscope returns:\n"
+             "   X: %f\n"
+             "   Y: %f\n"
+             "   Z: %f\n",
+             xyz[0] / scale,
+             xyz[1] / scale,
+             xyz[2] / scale);
+      break;
+    case 1:
+      printf("Gyroscope returns:\n"
+             "   X: %f\n",
+             xyz[0] / scale);
+      break;
+    case 2:
+      printf("Gyroscope returns:\n"
+             "   Y: %f\n",
+             xyz[1] / scale);
+      break;
+    case 3:
+      printf("Gyroscope returns:\n"
+             "   Z: %f\n",
+             xyz[2] / scale);
+      break;
+    default:
+      break;
+    }
+
+    tyang2896_lab7(delay);
   }
+  
 
-  printf("tyang2896_a2 returned: %d\n", tyang2896_a2(count, delay));
+  printf("tyang2896_lab7 returned: %d\n", tyang2896_lab7(delay) );
+
+  
 }
 
-ADD_CMD("tyang2896_a2", _tyang2896_Assignment2, "Assignment 2")
+ADD_CMD("tyang2896_lab7", Lab7_tyang2896,"Test the new lab 7 function")
 
-int tyang2896_string_test(char *p);
+/*
+* Function Name: tyang2896_a3
+* Parameter: 
+*   delay: interval of toggle leds
+*   pattern: LED toggle pattern
+*   number: repeat number of one entire pattern
+* Return: count of the leds toggled
+*/
+int tyang2896_a3(int delay, char *pattern, int number);
 
-void tyang2896_StringTest(int action)
+void A3_tyang2896(int action)
 {
 
   if(action==CMD_SHORT_HELP) return;
   if(action==CMD_LONG_HELP) {
-    printf("String Test\n\n"
-	   "This command tests new string function by tyang2896\n"
+    printf("Assignment 3 Test\n\n"
+	   "This command tests new A3 function by tyang2896\n"
 	   );
 
     return;
   }
 
-  int fetch_status;
-  char *destptr;
-
-  fetch_status = fetch_string_arg(&destptr);
-
+  int fetch_status = 0;
+  uint32_t delay = 0;
+  char *pattern = NULL;
+  uint32_t number = 0;
+  
+  fetch_status = fetch_uint32_arg(&delay);
   if (fetch_status) {
-    // Default logic goes here
+    delay = 0xFFFFFF;
+  }
+  fetch_status = fetch_string_arg(&pattern);
+  if (fetch_status) {
+    pattern = "01234567";
+  }
+  fetch_status = fetch_uint32_arg(&number);
+  if (fetch_status) {
+    number = 1;
   }
 
-  printf("string_test returned: %d\n", tyang2896_string_test(destptr) );
+  printf("tyang2896_a3 returned: %d\n", tyang2896_a3(delay, pattern, number));
 }
 
-ADD_CMD("tyang2896_string", tyang2896_StringTest,"Test the new string function")
+ADD_CMD("tyang2896_a3", A3_tyang2896,"Test the A3 function")

@@ -1,5 +1,5 @@
 /*
- *  C to assembler menu hook
+ *  C to assembler menu hook - Lab 8 Version
  *
  *  Modified by tyang2896
  * 
@@ -9,172 +9,105 @@
 #include <stdint.h>
 #include <ctype.h>
 
-#include "common.h"
 #include "stm32f3_discovery_gyroscope.h"
 
-/*
-* Function Name: tyang2896_lab6
-* Parameter: 
-*   delay: interval of toggle leds
-* Return: count of the leds toggled
-*/
-int tyang2896_lab6(int delay);
+#include "common.h"
 
-void Lab6_tyang2896(int action)
+#define N 500
+
+// A4 Interrupt Handlers - these are in tyang2896_asm.s
+void tyang2896_a4_btn(void);
+void tyang2896_a4_tick(void);
+
+
+// Timer tick hook for our timer interrupt
+// driven programming.
+//
+// Note that for now, this function toggles LED 0 every N cycles.
+void tyang2896_tick(void)
 {
-
-  if(action==CMD_SHORT_HELP) return;
-  if(action==CMD_LONG_HELP) {
-    printf("Lab 6\n\n"
-	   "This command tests new lab 6 function by tyang2896\n"
-	   );
-
-    return;
-  }
-  uint32_t delay = 0;
-
-  // Get deley from user
-  int fetch_status = fetch_uint32_arg(&delay);
-
-  if(fetch_status) {
-  	// Use a default delay value
-  	delay = 0xFFFFFF;
-  }
-
-  printf("tyang2896_lab6 returned: %d\n", tyang2896_lab6(delay) );
-}
-
-ADD_CMD("tyang2896_lab6", Lab6_tyang2896,"Test the new lab 6 function")
-
-int tyang2896_lab7(int delay);
-
-void Lab7_tyang2896(int action)
-{
-
-  if(action==CMD_SHORT_HELP) return;
-  if(action==CMD_LONG_HELP) {
-    printf("Lab 7\n\n"
-	   "This command tests new lab 7 function by tyang2896\n"
-	   );
-
-    return;
-  }
+  // Our tick variable is static so that it keeps its value from one
+  // function call to the next.
+  //
+  // If this was not static, this would not work because ticks would
+  // get reinitialized every time the function was called.
+  static int32_t ticks;
   
-  uint32_t delay = 0;
-  uint32_t count = 0;
-  uint32_t mode = 0;
-  uint32_t scale = 0;
+  // Increment our tick count every time the timer interrupt fires.
+  // Can you measure approximately how fast the tick is running? Try
+  // timing how long it takes for the LED to blink 10 times.
+  ticks++;
 
-  // Get deley from user
-  int fetch_status = fetch_uint32_arg(&delay);
-  if(fetch_status) {
-  	// Use a default delay value
-  	delay = 0xFFFFFF;
-  }
-  fetch_status = fetch_uint32_arg(&count);
-  if(fetch_status) {
-  	// Use a default count value
-  	count = 10;
-  }
-  fetch_status = fetch_uint32_arg(&mode);
-  if(fetch_status) {
-  	// Use a default count value
-  	mode = 0;
-  }
-  fetch_status = fetch_uint32_arg(&scale);
-  if(fetch_status) {
-  	// Use a default count value
-  	scale = 256;
-  }
-
-  for (size_t i = 0; i < count; i++)
+  // Every time we reach N cycles, reset the tick count to zero
+  // and toggle LED 0.
+  //
+  // This proves to us that our interrupt is working.
+  if (ticks > N)
   {
-    float xyz[3] = {0};
-
-    BSP_GYRO_GetXYZ(xyz);
-
-    switch (mode)
-    {
-    case 0:
-      printf("Gyroscope returns:\n"
-             "   X: %f\n"
-             "   Y: %f\n"
-             "   Z: %f\n",
-             xyz[0] / scale,
-             xyz[1] / scale,
-             xyz[2] / scale);
-      break;
-    case 1:
-      printf("Gyroscope returns:\n"
-             "   X: %f\n",
-             xyz[0] / scale);
-      break;
-    case 2:
-      printf("Gyroscope returns:\n"
-             "   Y: %f\n",
-             xyz[1] / scale);
-      break;
-    case 3:
-      printf("Gyroscope returns:\n"
-             "   Z: %f\n",
-             xyz[2] / scale);
-      break;
-    default:
-      break;
-    }
-
-    tyang2896_lab7(delay);
+    ticks = 0;
+    tyang2896_a4_tick();
   }
-  
 
-  printf("tyang2896_lab7 returned: %d\n", tyang2896_lab7(delay) );
 
-  
 }
 
-ADD_CMD("tyang2896_lab7", Lab7_tyang2896,"Test the new lab 7 function")
+// Button press hook for our button interrupt
+// driven programming.
+//
+// Note that for now, this function toggles LED 6 when the button is pressed.
+void tyang2896_btn(void)
+{
+  // For now, just toggle an LED to prove the button press was noticed.
+  tyang2896_a4_btn();
+}
 
-/*
-* Function Name: tyang2896_a3
-* Parameter: 
-*   delay: interval of toggle leds
-*   pattern: LED toggle pattern
-*   number: repeat number of one entire pattern
-* Return: count of the leds toggled
-*/
-int tyang2896_a3(int delay, char *pattern, int number);
+int tyang2896_lab8(void);
 
-void A3_tyang2896(int action)
+void Lab8_tyang2896(int action)
 {
 
   if(action==CMD_SHORT_HELP) return;
   if(action==CMD_LONG_HELP) {
-    printf("Assignment 3 Test\n\n"
-	   "This command tests new A3 function by tyang2896\n"
+    printf("Lab 8\n\n"
+	   "This command tests new lab 8 function by tyang2896\n"
 	   );
 
     return;
   }
 
-  int fetch_status = 0;
-  uint32_t delay = 0;
-  char *pattern = NULL;
-  uint32_t number = 0;
-  
-  fetch_status = fetch_uint32_arg(&delay);
-  if (fetch_status) {
-    delay = 0xFFFFFF;
-  }
-  fetch_status = fetch_string_arg(&pattern);
-  if (fetch_status) {
-    pattern = "01234567";
-  }
-  fetch_status = fetch_uint32_arg(&number);
-  if (fetch_status) {
-    number = 1;
-  }
 
-  printf("tyang2896_a3 returned: %d\n", tyang2896_a3(delay, pattern, number));
+  printf("tyang2896_lab8 returned: %d\n", tyang2896_lab8() );
 }
 
-ADD_CMD("tyang2896_a3", A3_tyang2896,"Test the A3 function")
+ADD_CMD("tyang2896_lab8", Lab8_tyang2896,"Test the new lab 8 function")
+
+int tyang2896_a4(int x);
+
+void A4_tyang2896(int action)
+{
+
+  if(action==CMD_SHORT_HELP) return;
+  if(action==CMD_LONG_HELP) {
+    printf("Assignment 4 Test\n\n"
+	   "This command tests new A4 function by tyang2896\n"
+	   );
+
+    return;
+  }
+
+  int fetch_status;
+  uint32_t a4_start;
+
+  fetch_status = fetch_uint32_arg(&a4_start);
+
+  if (fetch_status) {
+    a4_start = 1;
+  }
+
+
+  printf("tyang2896_a4 returned: %d\n", tyang2896_a4(a4_start) );
+}
+
+ADD_CMD("tyang2896_a4", A4_tyang2896,"Test the A4 function")
+
+
