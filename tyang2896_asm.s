@@ -67,9 +67,18 @@ tyang2896_lab8:
 tyang2896_lab9:
     push {lr}
 
-    @ These lines just show that the code is working
-    mov r0, #0
-    bl BSP_LED_Toggle
+    @ This is the assembly code to directly turn on an LED
+
+    @ This code turns on only one light – can you make it turn them all on at once?
+    ldr r1, =LEDaddress	@ Load the GPIO address we need
+    ldr r1, [r1]		@ Dereference r1 to get the value we want
+    ldrh r0, [r1]		@ Get the current state of that GPIO (half word only)
+
+    orr r0, r0, #0x0100		@ Use bitwise OR (ORR) to set the bit at 0x0100
+    strh r0, [r1]		@ Write the half word back to the memory address for the GPIO
+
+    LEDaddress:
+        .word 0x48001014
 
     pop {lr}
     bx lr                           @ Return (Branch eXchange) to the address in the link register (lr) 
