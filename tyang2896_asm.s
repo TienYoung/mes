@@ -74,7 +74,7 @@ tyang2896_lab9:
     ldr r1, [r1]		@ Dereference r1 to get the value we want
     ldrh r0, [r1]		@ Get the current state of that GPIO (half word only)
 
-    orr r0, r0, #0xAA00		@ Use bitwise OR (ORR) to set the bit at 0x0100
+    eor r0, r0, #0xAA00		@ Use bitwise OR (ORR) to set the bit at 0x0100
     strh r0, [r1]		@ Write the half word back to the memory address for the GPIO
 
     LEDaddress:
