@@ -81,6 +81,32 @@ void Lab8_tyang2896(int action)
 
 ADD_CMD("tyang2896_lab8", Lab8_tyang2896,"Test the new lab 8 function")
 
+/*
+* Function Name: tyang2896_lab9
+* Purpose: This function is toggle LED 0
+* Return: none
+*/
+int tyang2896_lab9(void);
+
+void Lab9_tyang2896(int action)
+{
+
+  if(action==CMD_SHORT_HELP) return;
+  if(action==CMD_LONG_HELP) {
+    printf("Lab 9\n\n"
+	   "This command tests new lab 9 function by tyang2896\n"
+	   );
+
+    return;
+  }
+
+  printf("tyang2896_lab9 returned: %d\n", tyang2896_lab9() );
+
+  
+}
+
+ADD_CMD("tyang2896_lab9", Lab9_tyang2896,"Test the new lab 9 function")
+
 int tyang2896_a4(int x);
 
 void A4_tyang2896(int action)

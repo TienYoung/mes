@@ -52,7 +52,28 @@ tyang2896_lab8:
     bx lr                           @ Return (Branch eXchange) to the address in the link register (lr) 
     .size   tyang2896_lab8, .-tyang2896_lab8    @@ - symbol size (not strictly required, but makes the debugger happy)
 
+@@ Function Header Block
 
+    .global tyang2896_lab9        @ Make the symbol name for the function visible to the linker
+    .type   tyang2896_lab9, %function   @ Declares that the symbol is a function (not strictly required)
+
+@ Function Declaration : int tyang2896_lab9(void)
+@
+@ Input: None
+@ Returns: r0
+@ 
+
+@ Here is the actual tyang2896_lab9 function
+tyang2896_lab9:
+    push {lr}
+
+    @ These lines just show that the code is working
+    mov r0, #0
+    bl BSP_LED_Toggle
+
+    pop {lr}
+    bx lr                           @ Return (Branch eXchange) to the address in the link register (lr) 
+    .size   tyang2896_lab9, .-tyang2896_lab9    @@ - symbol size (not strictly required)
 
 
 .global tyang2896_a4
