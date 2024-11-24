@@ -176,11 +176,11 @@ tyang2896_a4_tick:
     @ of calls.
 
 
-    @ ***** Get something
+    @ ***** Get status
     ldr r1, =a4_is_running
     ldr r0, [r1]
 
-    @ ***** Check something
+    @ ***** Check status
     cmp r0, #0
     ble a4_skip
 
@@ -191,10 +191,27 @@ tyang2896_a4_tick:
         @ Even within this logic, you should still take a philosopy of check
         @ things, do things, and store things - do not use delays of any sort,
         @ and only use loops if they are bounded (that is, guaranteed to end)
+        
+        @ ***** Get the number to skip
+        ldr r1, =a4_num_to_skip
+        ldr r0, [r1]
+        @ ***** Get the number of skipped
+        ldr r3, =a4_num_of_skipped
+        ldr r2, [r3]
+        @ ***** compare the number of skipped with total
+        cmp r2, r0
+        @ num2skip++
+        add r2, r2, #1
+        str r2, [r3]
+        blt a4_skip
 
-        @ ***** Do something
-        mov r0, #0
-        bl BSP_LED_Toggle
+            @ reset number of skipped
+            mov r0, #0
+            str r0, [r3]            
+                
+            @ ***** Do something
+            mov r0, #0
+            bl BSP_LED_Toggle
 
         @ DO NOT PUT LOGIC FOR A4 BELOW THIS LINE -----------------------------
         @ End of A4 skipped logic. Do not add logic below here.
@@ -234,6 +251,7 @@ busy_delay:
 a4_is_running: .word 0
 a4_num_to_skip: .word 0
 a4_direction: .word 0
+a4_num_of_skipped: .word 0
 a4_button_count: .word 0
 
 
