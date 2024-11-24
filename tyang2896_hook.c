@@ -107,7 +107,7 @@ void Lab9_tyang2896(int action)
 
 ADD_CMD("tyang2896_lab9", Lab9_tyang2896,"Test the new lab 9 function")
 
-int tyang2896_a4(int x);
+int tyang2896_a4(int status, int num2skip, int direction);
 
 void A4_tyang2896(int action)
 {
@@ -122,16 +122,24 @@ void A4_tyang2896(int action)
   }
 
   int fetch_status;
-  uint32_t a4_start;
+  uint32_t status;
+  uint32_t num2skip;
+  uint32_t direction;
 
-  fetch_status = fetch_uint32_arg(&a4_start);
-
+  fetch_status = fetch_uint32_arg(&status);
   if (fetch_status) {
-    a4_start = 1;
+    status = 1;
+  }
+  fetch_status = fetch_uint32_arg(&num2skip);
+  if (fetch_status) {
+    num2skip = 1;
+  }
+  fetch_status = fetch_uint32_arg(&direction);
+  if (fetch_status) {
+    direction = 1;
   }
 
-
-  printf("tyang2896_a4 returned: %d\n", tyang2896_a4(a4_start) );
+  printf("tyang2896_a4 returned: %d\n", tyang2896_a4(status, num2skip, direction));
 }
 
 ADD_CMD("tyang2896_a4", A4_tyang2896,"Test the A4 function")

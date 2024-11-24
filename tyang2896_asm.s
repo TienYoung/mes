@@ -88,10 +88,11 @@ tyang2896_lab9:
 .global tyang2896_a4
 .type   tyang2896_a4, %function
 
-@ Function Declaration : int tyang2896_a4(int x)
+@ Function Declaration : int tyang2896_a4(int status, int num2skip, int direction)
 @
-@ Input: Document this
-@ Returns: Document this
+@ Input: r0 holds status, r1 determines how many calls of tick will be skip,
+@ r2 holds the direction of LEDs blink. 
+@ Returns: Nothing
 @ 
 
 @ Here is the actual function
@@ -102,8 +103,16 @@ tyang2896_a4:
     @ aside from storing the parameters your A4 logic needs to run.
 
     @ Store the value we received indicating the running state
-    ldr r1, =a4_is_running
-    str r0, [r1]
+    ldr r3, =a4_is_running
+    str r0, [r3]
+
+    @ Store the value we received indicating the number of calls of tick to be skipped
+    ldr r3, =a4_num_to_skip
+    str r1, [r3]
+
+    @ Store the value we received indicating the direction of LEDs blink
+    ldr r3, =a4_direction
+    str r2, [r3]
 
     bx lr
     .size   tyang2896_a4, .-tyang2896_a4
@@ -223,6 +232,8 @@ busy_delay:
 @ We will put all necessary data for A4 in this block
 .data
 a4_is_running: .word 0
+a4_num_to_skip: .word 0
+a4_direction: .word 0
 a4_button_count: .word 0
 
 
