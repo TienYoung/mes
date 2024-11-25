@@ -209,9 +209,19 @@ tyang2896_a4_tick:
             mov r0, #0
             str r0, [r3]            
                 
-            @ ***** Do something
-            mov r0, #0
+            @ load current LED index
+            ldr r1, =a4_current_LED
+            ldr r0, [r1]
             bl BSP_LED_Toggle
+
+            @ load direction
+            ldr r3, =a4_direction
+            ldr r2, [r3]
+            ldr r1, =a4_current_LED
+            ldr r0, [r1]
+            add r0, r0, r2              @ index = index + direcion
+            and r0, #7                  @ MOD 8
+            str r0, [r1]                @ store back to a4_current_LED
 
         @ DO NOT PUT LOGIC FOR A4 BELOW THIS LINE -----------------------------
         @ End of A4 skipped logic. Do not add logic below here.
@@ -250,8 +260,9 @@ busy_delay:
 .data
 a4_is_running: .word 0
 a4_num_to_skip: .word 0
-a4_direction: .word 0
 a4_num_of_skipped: .word 0
+a4_direction: .word 0
+a4_current_LED: .word 0
 a4_button_count: .word 0
 
 

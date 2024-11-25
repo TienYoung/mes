@@ -132,11 +132,11 @@ void A4_tyang2896(int action)
   }
   fetch_status = fetch_uint32_arg(&num2skip);
   if (fetch_status) {
-    num2skip = 1;
+    num2skip = 0;
   }
   fetch_status = fetch_uint32_arg(&direction);
   if (fetch_status) {
-    direction = 1;
+    direction = 0;
   }
 
   printf("tyang2896_a4 returned: %d\n", tyang2896_a4(status, num2skip, direction));
