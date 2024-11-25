@@ -97,7 +97,7 @@ tyang2896_lab9:
 
 @ Here is the actual function
 tyang2896_a4:
-
+    push {lr, r4}
     @ This function only exists to start / initialize your A4
     @ logic working. No actions should be taken in this logic,
     @ aside from storing the parameters your A4 logic needs to run.
@@ -110,10 +110,29 @@ tyang2896_a4:
     ldr r3, =a4_num_to_skip
     str r1, [r3]
 
+    @ Reset number of skipped to zero
+    ldr r3, =a4_num_of_skipped
+    mov r1, #0
+    str r1, [r3]
+
     @ Store the value we received indicating the direction of LEDs blink
     ldr r3, =a4_direction
     str r2, [r3]
 
+    @ Reset current LED index to zero
+    ldr r3, =a4_current_LED
+    mov r2, #0
+    str r2, [r3]
+
+    mov r4, #7                 @ Set the max LED index
+    loop:
+        mov r0, r4             @ Set LED index to r0
+        bl BSP_LED_Off         @ Turn off LED
+        subs r4, r4, #1        @ index--
+        bge loop               @ if(index >= 0) continue
+    end:
+
+    pop {lr, r4}
     bx lr
     .size   tyang2896_a4, .-tyang2896_a4
 
@@ -217,11 +236,12 @@ tyang2896_a4_tick:
             @ load direction
             ldr r3, =a4_direction
             ldr r2, [r3]
+            @ load current LED index
             ldr r1, =a4_current_LED
             ldr r0, [r1]
             add r0, r0, r2              @ index = index + direcion
             and r0, #7                  @ MOD 8
-            str r0, [r1]                @ store back to a4_current_LED
+            str r0, [r1]                @ store curent LED index
 
         @ DO NOT PUT LOGIC FOR A4 BELOW THIS LINE -----------------------------
         @ End of A4 skipped logic. Do not add logic below here.
