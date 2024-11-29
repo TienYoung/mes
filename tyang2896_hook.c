@@ -107,6 +107,32 @@ void Lab9_tyang2896(int action)
 
 ADD_CMD("tyang2896_lab9", Lab9_tyang2896,"Test the new lab 9 function")
 
+void mes_InitIWDG(int reload);
+void mes_IWDGStart(void);
+void mes_IWDGRefresh(void);
+
+void Lab10_tyang2896(int action)
+{
+
+  if(action==CMD_SHORT_HELP) return;
+  if(action==CMD_LONG_HELP) {
+    printf("Lab 10\n\n"
+	   "This command tests new lab 8 function by tyang2896\n"
+	   );
+
+    return;
+  }
+
+  printf("Initializing Watchdog\n");
+  mes_InitIWDG(9999);
+
+  printf("Starting Watchdog\n");
+  mes_IWDGStart();
+  
+}
+
+ADD_CMD("tyang2896_lab10", Lab10_tyang2896,"Test the new lab 10 function")
+
 int tyang2896_a4(int status, int num2skip, int direction);
 
 void A4_tyang2896(int action)
