@@ -183,6 +183,11 @@ tyang2896_a5:
         bge loop_led           @ if(index >= 0) continue
     end_led:
 
+    @ Initialize the watchdog with 8000 reload value then start
+    mov r0, #8000
+    bl mes_InitIWDG
+    bl mes_IWDGStart
+
     pop {lr, r4}
     bx lr
     .size   tyang2896_a5, .-tyang2896_a5
