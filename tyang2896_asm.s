@@ -342,9 +342,12 @@ tyang2896_a5_tick:
         @ things, do things, and store things - do not use delays of any sort,
         @ and only use loops if they are bounded (that is, guaranteed to end)
 
-        @ This is only temporary to test your work
-        mov r0, #0
-        bl BSP_LED_Toggle
+        ldr r1, =LEDaddress	@ Load the GPIO address we need
+        ldr r1, [r1]		@ Dereference r1 to get the value we want
+        ldrh r0, [r1]		@ Get the current state of that GPIO (half word only)
+
+        eor r0, r0, #0x5500		@ Use bitwise XOR (EOR) to toggle the bit at 0x5500 = 0x0100 | 0x0400 | 0x1000 | 0x4000
+        strh r0, [r1]		@ Write the half word back to the memory address for the GPIO
 
 
         @ DO NOT PUT LOGIC FOR A5 BELOW THIS LINE -----------------------------
