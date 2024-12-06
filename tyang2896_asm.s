@@ -139,10 +139,9 @@ tyang2896_a4:
 .global tyang2896_a5
 .type   tyang2896_a5, %function
 
-@ Function Declaration : int tyang2896_a5(int status, int num2skip, int direction)
+@ Function Declaration : int tyang2896_a5(int status)
 @
-@ Input: r0 holds status, r1 determines how many calls of tick will be skip,
-@ r2 holds the direction of LEDs blink. 
+@ Input: r0 holds status 
 @ Returns: Nothing
 @ 
 
