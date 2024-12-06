@@ -18,6 +18,7 @@
 // A4 Interrupt Handlers - these are in tyang2896_asm.s
 void tyang2896_a4_btn(void);
 void tyang2896_a4_tick(void);
+void tyang2896_a5_tick(void);
 
 
 // Timer tick hook for our timer interrupt
@@ -45,7 +46,7 @@ void tyang2896_tick(void)
   if (ticks > N)
   {
     ticks = 0;
-    tyang2896_a4_tick();
+    tyang2896_a5_tick();
   }
 
 
@@ -178,4 +179,39 @@ void A4_tyang2896(int action)
 
 ADD_CMD("tyang2896_a4", A4_tyang2896,"Test the A4 function")
 
+int tyang2896_a5(int status, int num2skip, int direction);
 
+void A5_tyang2896(int action)
+{
+
+  if(action==CMD_SHORT_HELP) return;
+  if(action==CMD_LONG_HELP) {
+    printf("Assignment 5 Test\n\n"
+	   "This command tests new A5 function by tyang2896\n"
+	   );
+
+    return;
+  }
+
+  int fetch_status;
+  uint32_t status;
+  uint32_t num2skip;
+  uint32_t direction;
+
+  fetch_status = fetch_uint32_arg(&status);
+  if (fetch_status) {
+    status = 1;
+  }
+  fetch_status = fetch_uint32_arg(&num2skip);
+  if (fetch_status) {
+    num2skip = 0;
+  }
+  fetch_status = fetch_uint32_arg(&direction);
+  if (fetch_status) {
+    direction = 0;
+  }
+
+  printf("tyang2896_a5 returned: %d\n", tyang2896_a5(status, num2skip, direction));
+}
+
+ADD_CMD("tyang2896_a5", A5_tyang2896,"Test the A5 function")

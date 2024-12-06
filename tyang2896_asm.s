@@ -136,6 +136,56 @@ tyang2896_a4:
     bx lr
     .size   tyang2896_a4, .-tyang2896_a4
 
+.global tyang2896_a5
+.type   tyang2896_a5, %function
+
+@ Function Declaration : int tyang2896_a5(int status, int num2skip, int direction)
+@
+@ Input: r0 holds status, r1 determines how many calls of tick will be skip,
+@ r2 holds the direction of LEDs blink. 
+@ Returns: Nothing
+@ 
+
+@ Here is the actual function
+tyang2896_a5:
+    push {lr, r4}
+    @ This function only exists to start / initialize your A5
+    @ logic working. No actions should be taken in this logic,
+    @ aside from storing the parameters your A5 logic needs to run.
+
+    @ Store the value we received indicating the running state
+    ldr r3, =a5_running
+    str r0, [r3]
+
+    @ Store the value we received indicating the number of calls of tick to be skipped
+    ldr r3, =a4_num_to_skip
+    str r1, [r3]
+
+    @ Reset number of skipped to zero
+    ldr r3, =a4_num_of_skipped
+    mov r1, #0
+    str r1, [r3]
+
+    @ Store the value we received indicating the direction of LEDs blink
+    ldr r3, =a4_direction
+    str r2, [r3]
+
+    @ Reset current LED index to zero
+    ldr r3, =a4_current_LED
+    mov r2, #0
+    str r2, [r3]
+
+    mov r4, #7                 @ Set the max LED index
+    loop_led:
+        mov r0, r4             @ Set LED index to r0
+        bl BSP_LED_Off         @ Turn off LED
+        subs r4, r4, #1        @ index--
+        bge loop_led           @ if(index >= 0) continue
+    end_led:
+
+    pop {lr, r4}
+    bx lr
+    .size   tyang2896_a5, .-tyang2896_a5
 
 .global tyang2896_a4_btn
 .type   tyang2896_a4_btn, %function
@@ -253,6 +303,59 @@ tyang2896_a4_tick:
     bx lr
     .size   tyang2896_a4_tick, .-tyang2896_a4_tick
 
+.global tyang2896_a5_tick
+.type   tyang2896_a5_tick, %function
+
+@ Function Declaration : void tyang2896_a5_tick(void)
+@
+@ Input: None
+@ Returns: Nothing
+@ 
+
+@ Here is the actual function
+tyang2896_a5_tick:
+    push {lr}
+
+    @ As a starting point, this function implements the basics needed
+    @ to determine if our A5 logic should run or not.
+    @
+    @ You will have to add logic here for A5.
+
+    @ Some useful notes
+    @
+    @ DO NOT REFRESH THE WATCHDOG WITH mes_IWDGRefresh UNLESS IT
+    @ HAS PREVIOUSLY BEEN STARTED OR YOUR BOARD WILL CRASH
+
+    @ ***** Get something
+    ldr r1, =a5_running
+    ldr r0, [r1]
+
+    @ ***** Check something
+    cmp r0, #0
+    ble a5_skip
+
+        @ This part below is skipped if A5 is NOT running. You will want to
+        @ keep all your A5 logic inside here.
+        @ DO NOT PUT LOGIC FOR A5 ABOVE THIS LINE -----------------------------
+
+        @ Even within this logic, you should still take a philosophy of check
+        @ things, do things, and store things - do not use delays of any sort,
+        @ and only use loops if they are bounded (that is, guaranteed to end)
+
+        @ This is only temporary to test your work
+        mov r0, #0
+        bl BSP_LED_Toggle
+
+
+        @ DO NOT PUT LOGIC FOR A5 BELOW THIS LINE -----------------------------
+        @ End of A5 skipped logic. Do not add logic below here.
+
+    a5_skip:
+
+    @ ***** Exit
+    pop {lr}
+    bx lr
+    .size   tyang2896_a5_tick, .-tyang2896_a5_tick
 
 @ Function Declaration : int busy_delay(int cycles)
 @
@@ -285,6 +388,7 @@ a4_direction: .word 0
 a4_current_LED: .word 0
 a4_button_count: .word 0
 
+a5_running: .word 0
 
 @ Assembly file ended by single .end directive on its own line
 .end
