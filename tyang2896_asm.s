@@ -187,6 +187,9 @@ tyang2896_a5:
     mov r0, #8000
     bl mes_InitIWDG
     bl mes_IWDGStart
+    ldr r3, =a5_IWDG_initialized
+    mov r0, #1
+    str r0, [r3]
 
     pop {lr, r4}
     bx lr
@@ -330,6 +333,15 @@ tyang2896_a5_tick:
     @
     @ DO NOT REFRESH THE WATCHDOG WITH mes_IWDGRefresh UNLESS IT
     @ HAS PREVIOUSLY BEEN STARTED OR YOUR BOARD WILL CRASH
+    @ Get watchdog status.
+    ldr r1, =a5_IWDG_initialized
+    ldr r0, [r1] 
+    @ Refresh when it initialized
+    cmp r0, #1
+    blt skip_refresh
+        bl mes_IWDGRefresh
+    skip_refresh:
+    
 
     @ ***** Get something
     ldr r1, =a5_running
@@ -397,6 +409,7 @@ a4_current_LED: .word 0
 a4_button_count: .word 0
 
 a5_running: .word 0
+a5_IWDG_initialized: .word 0
 
 @ Assembly file ended by single .end directive on its own line
 .end
