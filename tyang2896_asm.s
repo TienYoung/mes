@@ -148,50 +148,25 @@ tyang2896_a4:
 
 @ Here is the actual function
 tyang2896_a5:
-    push {lr, r4}
+    push {lr}
     @ This function only exists to start / initialize your A5
     @ logic working. No actions should be taken in this logic,
     @ aside from storing the parameters your A5 logic needs to run.
 
     @ Store the value we received indicating the running state
-    ldr r3, =a5_running
-    str r0, [r3]
-
-    @ Store the value we received indicating the number of calls of tick to be skipped
-    ldr r3, =a4_num_to_skip
-    str r1, [r3]
-
-    @ Reset number of skipped to zero
-    ldr r3, =a4_num_of_skipped
-    mov r1, #0
-    str r1, [r3]
-
-    @ Store the value we received indicating the direction of LEDs blink
-    ldr r3, =a4_direction
-    str r2, [r3]
-
-    @ Reset current LED index to zero
-    ldr r3, =a4_current_LED
-    mov r2, #0
-    str r2, [r3]
-
-    mov r4, #7                 @ Set the max LED index
-    loop_led:
-        mov r0, r4             @ Set LED index to r0
-        bl BSP_LED_Off         @ Turn off LED
-        subs r4, r4, #1        @ index--
-        bge loop_led           @ if(index >= 0) continue
-    end_led:
+    ldr r1, =a5_running
+    str r0, [r1]
 
     @ Initialize the watchdog with 8000 reload value then start
     mov r0, #8000
     bl mes_InitIWDG
     bl mes_IWDGStart
-    ldr r3, =a5_IWDG_initialized
+    @ Store watchdog status
+    ldr r1, =a5_IWDG_initialized
     mov r0, #1
-    str r0, [r3]
+    str r0, [r1]
 
-    pop {lr, r4}
+    pop {lr}
     bx lr
     .size   tyang2896_a5, .-tyang2896_a5
 

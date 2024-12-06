@@ -180,7 +180,7 @@ void A4_tyang2896(int action)
 
 ADD_CMD("tyang2896_a4", A4_tyang2896,"Test the A4 function")
 
-int tyang2896_a5(int status, int num2skip, int direction);
+int tyang2896_a5(int status);
 
 void A5_tyang2896(int action)
 {
@@ -196,23 +196,13 @@ void A5_tyang2896(int action)
 
   int fetch_status;
   uint32_t status;
-  uint32_t num2skip;
-  uint32_t direction;
 
   fetch_status = fetch_uint32_arg(&status);
   if (fetch_status) {
     status = 1;
   }
-  fetch_status = fetch_uint32_arg(&num2skip);
-  if (fetch_status) {
-    num2skip = 0;
-  }
-  fetch_status = fetch_uint32_arg(&direction);
-  if (fetch_status) {
-    direction = 0;
-  }
 
-  printf("tyang2896_a5 returned: %d\n", tyang2896_a5(status, num2skip, direction));
+  printf("tyang2896_a5 returned: %d\n", tyang2896_a5(status));
 }
 
 ADD_CMD("tyang2896_a5", A5_tyang2896,"Test the A5 function")
