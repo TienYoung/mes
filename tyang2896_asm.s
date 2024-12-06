@@ -223,6 +223,27 @@ tyang2896_a4_btn:
     bx lr
     .size   tyang2896_a4_btn, .-tyang2896_a4_btn
 
+.global tyang2896_a5_btn
+.type   tyang2896_a5_btn, %function
+
+@ Function Declaration : void tyang2896_a5_btn(void)
+@
+@ Input: None
+@ Returns: Nothing
+@ 
+@ Reminder - this requires the button has been initialized as an interrupt
+@ in main.c using BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI)
+@ as well as requires a new function set up void EXTI0_IRQHandler(void)
+
+@ Here is the actual function
+tyang2896_a5_btn:
+
+    ldr r1, =a5_btn_pressed        @ Get the address of the button status
+    mov r0, #1
+    str r0, [r1]                   @ Store the pressed status
+
+    bx lr
+    .size   tyang2896_a5_btn, .-tyang2896_a5_btn
 
 .global tyang2896_a4_tick
 .type   tyang2896_a4_tick, %function
@@ -339,7 +360,13 @@ tyang2896_a5_tick:
     @ Refresh when it initialized
     cmp r0, #1
     blt skip_refresh
-        bl mes_IWDGRefresh
+        @ Get button status.
+        ldr r1, =a5_btn_pressed
+        ldr r0, [r1]
+        @ Stop refresh when the button pressed.
+        cmp r0, #1
+        beq skip_refresh
+            bl mes_IWDGRefresh
     skip_refresh:
     
 
@@ -410,6 +437,7 @@ a4_button_count: .word 0
 
 a5_running: .word 0
 a5_IWDG_initialized: .word 0
+a5_btn_pressed: .word 0
 
 @ Assembly file ended by single .end directive on its own line
 .end

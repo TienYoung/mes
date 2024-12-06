@@ -18,6 +18,7 @@
 // A4 Interrupt Handlers - these are in tyang2896_asm.s
 void tyang2896_a4_btn(void);
 void tyang2896_a4_tick(void);
+void tyang2896_a5_btn(void);
 void tyang2896_a5_tick(void);
 
 
@@ -59,7 +60,7 @@ void tyang2896_tick(void)
 void tyang2896_btn(void)
 {
   // For now, just toggle an LED to prove the button press was noticed.
-  tyang2896_a4_btn();
+  tyang2896_a5_btn();
 }
 
 int tyang2896_lab8(void);
